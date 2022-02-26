@@ -1,8 +1,8 @@
-var config = {
+var config = { //corre variables físicas
     type: Phaser.AUTO,
     width: 800,
     height: 600,
-    physics: {
+    physics: {//motor de física del juego
         default: 'arcade',
         arcade: {
             gravity: { y: 300 },
@@ -15,7 +15,7 @@ var config = {
         update: update
     }
 };
-
+//Elementos del juego
 var player;
 var stars;
 var bombs;
@@ -25,6 +25,7 @@ var score = 0;
 var gameOver = false;
 var scoreText;
 
+//se crea el objeto Phaser.Game con las configuraciones de la variable config
 var game = new Phaser.Game(config);
 
 
@@ -124,6 +125,7 @@ function create ()
     this.physics.add.collider(player, bombs, hitBomb, null, this);
 }
 
+// indica la velocidad de movimiento del jugador
 function update ()
 {
     if (gameOver)
@@ -132,13 +134,14 @@ function update ()
     }
 
     if (cursors.left.isDown)
-    {
+    {   //cambia la posición de la imagen del jugador a la izquierda
         player.setVelocityX(-160);
 
         player.anims.play('left', true);
     }
     else if (cursors.right.isDown)
     {
+        //cambia la posición de la imagen del jugador a la derecha
         player.setVelocityX(160);
 
         player.anims.play('right', true);
@@ -151,7 +154,7 @@ function update ()
     }
 
     if (cursors.up.isDown && player.body.touching.down)
-    {
+    {   //cambia la posición de la imagen hacia arriba
         player.setVelocityY(-330);
     }
 }
@@ -161,9 +164,10 @@ function collectStar (player, star)
     star.disableBody(true, true);
 
     //  Add and update the score
+    //incrementar o disminuir el puntaje que da cada estrella
     score += 10;
     scoreText.setText('Score: ' + score);
-
+    //cuando recolectamos todas las estrellas aparece otro set de estrellas
     if (stars.countActive(true) === 0)
     {
         //  A new batch of stars to collect
@@ -173,6 +177,7 @@ function collectStar (player, star)
 
         });
 
+        //indica como van a aparecer las bombas en relación a la posición del jugador
         var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
 
         var bomb = bombs.create(x, 16, 'bomb');
@@ -186,11 +191,15 @@ function collectStar (player, star)
 
 function hitBomb (player, bomb)
 {
+    //se pausa el juego al golpear una bomba
     this.physics.pause();
-
+    
+    //cambia el color del jugador
     player.setTint(0xff0000);
 
+    //cambia la posición de la imagen
     player.anims.play('turn');
 
+    //termina el juego
     gameOver = true;
 }
